@@ -1,36 +1,24 @@
-package Analizador;
-import static Analizador.Token.*;
+package analizador;
+import static analizador.Token.*;
 
 %%
-
 %class miniPHP
 %type Token
 
-ENTERO = ([1-9][0-9]*)|0
-HEXADECIMAL = 0[xX][0-9a-fA-F]+
-OCTAL = 0[0-7]+
-BINARIO = 0[bB][01]+
-DECIMAL = (([1-9][0-9]*)|0).[0-9]+
-EXPONENTE = (([0-9]+|{DECIMAL})[Ee](\+|-)?[0-9]+)
+ASCII = ("+"|"*"|[\/]|"%"|"-"|"**"|"."|\!|"#"|"$"|"&"|"="|"?"|"¡"|"¿"|"@"|\"|"¨"|"<"|">"|\"|\´|"_"|"~"|":"|",")*
+PALABRA = [A-Za-z_][A-Za-z]*
+WHITE = [" "\t\r\n]
+
+ASIGNAR = (.|\+)?"=" | "->" | ":"
 PHP_INICIO = \<\?[Pp][Hh][Pp]
 PHP_FINAL = \?\>
-AVANCE_LINEA = \\n
-RETORNO_CARRO = \\r
-TAB_HORIZONTAL = \\t
-TAB_VERTICAL = \\v
-ESCAPE = \\e
-AVANCE_PAGINA = \\f
-BACK_SLASH = \\\\
-DOLLAR = \\\$
-COMILLAS = \\\"
-ASIGNAR = (.|\+)?\=
-ASCII = (\w|\/|.|\!|\#|\$|%|&|\=|\?|¡|¿|@|\"|¨|\*|\+|\<|\>|\~|,|;|:|-|\"|\´)
-C_CIMPLE = \'({ASCII})+\'
-C_HEREDOC = \<\<\<{ASCII}+
-C_DOBLE = \"({ASCII}|{AVANCE_LINEA}|{RETORNO_CARRO}|{TAB_HORIZONTAL}|{TAB_VERTICAL}|{ESCAPE}|{AVANCE_PAGINA}|{BACK_SLASH}|{DOLLAR}|{COMILLAS})*\"
-C_NOWDOC =\<\<\<({ASCII}|{AVANCE_LINEA}|{RETORNO_CARRO}|{TAB_HORIZONTAL}|{TAB_VERTICAL}|{ESCAPE}|{AVANCE_PAGINA}|{BACK_SLASH}|{DOLLAR}|{COMILLAS})*
-WHITE = [ \t\r\n]
-PR_HALT_COMPILER = __[Hh][Aa][Ll][Tt]_[Cc][Oo][Mm][Pp][Ii][Ll][Ee][Rr]\(\)
+SEPARADOR = ";"|","|"["|"]"
+DEFINICION_O = "("
+DEFINICION_C = ")"
+FUNCION_O = "{"
+FUNCION_C = "}"
+
+PR_HALT_COMPILER = "__"[Hh][Aa][Ll][Tt]_[Cc][Oo][Mm][Pp][Ii][Ll][Ee][Rr]\(\)
 PR_ABSTRACT = [Aa][Bb][Ss][Tt][Rr][Aa][Cc][Tt]
 PR_ARRAY = [Aa][Rr][Rr][Aa][Yy]\(\)
 PR_AS = [Aa][Ss]
@@ -44,10 +32,7 @@ PR_CONTINUE = [Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee]
 PR_DECLARE = [Dd][Ee][Cc][Ll][Aa][Rr][Ee]
 PR_DEFAULT = [Dd][Ee][Ff][Aa][Uu][Ll][Tt]
 PR_DIE = [Dd][Ii][Ee]\(\)
-PR_DO = [Dd][Oo]
 PR_ECHO = [Ee][Cc][Hh][Oo]
-PR_ELSE = [Ee][Ll][Ss][Ee]
-PR_ELSEIF = [Ee][Ll][Ss][Ee][Ii][Ff]
 PR_EMPTY = [Ee][Mm][Pp][Tt][Yy]\(\)
 PR_ENDDECLARE = [Ee][Nn][Dd][Dd][Ee][Cc][Ll][Aa][Rr][Ee]
 PR_ENDFOR = [Ee][Nn][Dd][Ff][Oo][Rr]
@@ -58,12 +43,8 @@ PR_EXIT = [Ee][Xx][Ii][Tt]\(\)
 PR_EXTENDS = [Ee][Xx][Tt][Ee][Nn][Dd][Ss]
 PR_FINAL = [Ff][Ii][Nn][Aa][Ll]
 PR_FINALLY = [Ff][Ii][Nn][Aa][Ll][Ll][Ii]
-PR_FOR = [Ff][Oo][Rr]
-PR_FOREACH = [Ff][Oo][Rr][Ee][Aa][Cc][Hh]
-PR_FUNCTION = [Ff][Uu][Nn][Cc][Tt][Ii][Oo][Nn]
 PR_GLOBAL = [Gg][Ll][Oo][Bb][Aa][Ll]
 PR_GOTO = [Gg][Oo][Tt][Oo]
-PR_IF = [Ii][Ff]
 PR_IMPLEMENTS = [Ii][Mm][Pp][Ll][Ee][Mm][Ee][Nn][Tt][Ss]
 PR_INCLUDE = [Ii][Nn][Cc][Ll][Uu][Dd][Ee]
 PR_INCLUDE_ONCE = [Ii][Nn][Cc][Ll][Uu][Dd][Ee]_[Oo][Nn][Cc][Ee]
@@ -79,90 +60,95 @@ PR_PRIVATE = [Pp][Rr][Ii][Vv][Aa][Tt][Ee]
 PR_PROTECTED = [Pp][Rr][Oo][Tt][Ee][Cc][Tt][Ee][Dd]
 PR_PUBLIC = [Pp][Uu][Bb][Ii][Cc]
 PR_REQUIRE = [Rr][Ee][Qq][Uu][Ii][Rr][Ee]
-PR_REQUIRE_ONCE = [Rr][Ee][Qq][Uu][Ii][Rr][Ee]_[Oo][Nn][Cc][Ee]
+PR_REQUIRE_ONCE = [Rr][Ee][Qq][Uu][Ii][Rr][Ee]"_"[Oo][Nn][Cc][Ee]
 PR_RETURN = [Rr][Ee][Tt][Uu][Rr][Nn]
 PR_STATIC = [Ss][Tt][Aa][Tt][Ii][Cc]
-PR_SWITCH = [Ss][Ww][Ii][Tt][Cc][Hh]
 PR_THROW = [Tt][Hh][Oo][Ww]
 PR_TRAIT = [Tt][Rr][Aa][Ii][Tt]
 PR_TRY = [Tt][Rr][Yy]
 PR_UNSET = [Uu][Nn][Ss][Ee][Tt]\(\)
 PR_USE = [Uu][Ss][Ee]
 PR_VAR = [Vv][Aa][Rr]
-PR_WHILE = [Ww][Hh][Ii][Ll][Ee]
 PR_YIELD = [Yy][Ii][Ee][Ll][Dd]
-OP_ARITMETICOS = \+|\*|\/|%|-|(\*\*)
+
+COMENTARIO = "//"({PALABRA}|" "|[0-9]|{ASCII}|","|[\']|"["|"]"|"{"|"}")+
+COMENTARIO_MULTILINEA = "/*"({PALABRA}|" "|[0-9]|{ASCII}|{WHITE}|","|[\']|"["|"]"|"{"|"}")+"*"[\/]
+COMENTARIO_CONSOLA = "#" ({PALABRA}|" "|[0-9]|{ASCII}|{WHITE}|","|[\']|"["|"]"|"{"|"}")+ "#"
+
+OP_ARITMETICOS = "+"|"*"|"/"|"%"|"-"|"**"
 OP_LOGICOS = ([Aa][Nn][Dd])|([Oo][Rr])|([Xx][Oo][Rr])|(\&\&)|(\|\|)|\!
-OP_COMPARACION = (\=\=)|(\=\=\=)|(!\=)|(\<\>)|(!\=\=)|\<|\>|(\<\=)|(\>\=)|(\<\=\>)|(\?\?)
+OP_COMPARACION = "=="|("===")|("!=")|("<>")|("!==")|"<"|">"|("<=")|(">=")|("<=>")|("??")
+
 T_BOOL_TRUE = [Tt][Rr][Uu][Ee]
 T_BOOL_FALSE = [Ff][Aa][Ll][Ss][Ee]
-T_INTEGER = (\+|-)?({ENTERO}|{HEXADECIMAL}|{OCTAL}|{BINARIO})                           
-T_FLOAT = (\+|-)?({DECIMAL}|{EXPONENTE}|[0-9]+)       
-T_STRING = {C_CIMPLE}|{C_DOBLE}|{C_HEREDOC}|{C_NOWDOC}
-IDENTIFICADOR = [Tt]_[a-zA-Z_]\w*
-VARIABLE = \$(\$)?[a-zA-Z_]\w*  
-CONSTANTE = [a-zA-Z_]\w*
-LINE = __[Ll][Ii][Nn][Ee]__
-FILE = __[Ff][Ii][Ll][Ee]__
+T_INTEGER = (\+|-)? ( (([1-9][0-9]*)|0) | (0[xX][0-9a-fA-F]+) | (0[0-7]+) | (0[bB][01]+) )                           
+T_FLOAT = (\+|-)? ([0-9]+|0)"."([0-9]+|0)([Ee]("+"|"-")?)?[0-9]+      
+T_STRING = ((\')(" "|{PALABRA}|{ASCII})+(\') )| ("<<<"(" "|{PALABRA}|{ASCII})+)|((\")(" "|{PALABRA}|{ASCII})+(\"))
+
+IDENTIFICADOR = (\')?(("&")?{PALABRA}|(("$")?{PALABRA}("_")?({PALABRA}|[0-9])*))((".")?{PALABRA})(\')?
+
+VARIABLE = \$(\$)?{PALABRA}+ 
+
+LINE = "__"[Ll][Ii][Nn][Ee]"__"
+FILE = __[Ff][Ii][LL][Ee]__
 DIR = __[Dd][Ii][Rr]__
 FUNCTION = __[Ff][Uu][Nn][Cc][Tt][Ii][Oo][Nn]__
 CLASS = __[Cc][Ll][Aa][Ss]__
-TRAIT = __[Tt][Rr][Aa][Ii][Tt]__s
+TRAIT = __[Tt][Rr][Aa][Ii][Tt]__
 METHOD = __[Mm][Ee][Tt][Hh][Oo][Dd]__
 NAMESPACE = __[Nn][Aa][Mm][Ee][Ss][Pp][Aa][Cc][Ee]__
-CLASSNAME = ::[Cc][Ll][Aa][Ss]
-E_IF = {PR_IF}\s*\((\s|\S)+\)\s*\{(\s|\S)+\}
-E_ELSEIF = {PR_IF}\s*\((\s|\S)+\)\{(\S|\s)+\}\s*{PR_ELSEIF}\s*\((\s|\S)+\)\{(\s|\S)+\}\s*{PR_ELSE}\s*\((\s|\S)+\)\{(\s|\S)+\}
-E_ELSE = {PR_IF}\s*\((\s|\S)+\)\s*\{(\s|\S)+\}\s*{PR_ELSE}\s*\((\s|\S)+\)\s*\{(\s|\S)+\}
-E_WHILE = ({PR_WHILE}\s*\((\s|\S)+\)\{(\s|\S)+\})|(({PR_WHILE}\s*\((\s|\S)+\):(\s|\S)+)\s*{PR_ENDWHILE});
-E_DOWHILE = {PR_DO}\s*\{(\s|\S)+\}\s*\{PR_WHILE}\s*\((\s|\S)+\);
-E_FOR = ({PR_FOR}\s*\((\s|\S)+\)\s*\{(\s|\S)+\})|({PR_ENDFOR}\s*\((\s|\S)+\);)
-E_FOREACH = {PR_FOREACH}\s*\((\s|\S)+\)\s*\{(\s|\S)+\}
-E_SWITCH = {PR_SWITCH}\s*\(\s*{VARIABLE}\s*\)\s*(\{(\s|\S)+\s*\})|(:(\s|\S)+{PR_ENDSWITCH};)
-GLOBALS = \$[Gg][Ll][Oo][Bb][Aa][Ll][Ss]
-SERVER = \$_[Ss][Ee][Rr][Vv][Ee][Rr]
-GET = \$_[Gg][Ee][Tt]
-POST = \$_[Pp][Oo][Ss][Tt]
-FILES = \$_[Ff][Ii][Ll][Ee][Ss]
-REQUEST = \$_[Rr][Ee][Qq][Uu][Ee][Ss][Tt]
-SESSION = \$_[Ss][Ee][Ss][Ss][Ii][Oo][Nn]
-ENV = \$_[Ee][Nn][Vv]
-COOKIE = \$_[Cc][Oo][Kk][Ii][Ee]
-PHP_ERRORMSG = \$[Pp][Hh][Pp]_[Ee][Rr][Rr][Oo][Rr][Mm][Ss][Gg]
-HTTP_RAW_POST_DATA = \$[Hh][Tt][Tt][Pp]_[Rr][Aa][Ww]_[Pp][Oo][Ss][Tt]_[Dd][Aa][Tt][Aa]
-HTTP_RESPONSE_HEADER = \$[Hh][Tt][Tt][Pp]_[Rr][Ee][Ss][Pp][Oo][Nn][Ss][Ee]_[Hh][Ee][Aa][Dd][Ee][Rr]
-ARGC = \$[Aa][Rr][Gg][Cc]
-ARGV = \$[Aa][Rr][Gg][Vv]
-F_ANONIMA = {PR_FUNCTION}\s*\(\s*[a-zA-Z_]\w*\s*\)\s*\{({ASCII}|{T_INTEGER}|{T_FLOAT}|\s*)\};
-F_VARIABLE = {PR_FUNCTION}\s*[a-zA-Z_]\w*\s*\(\s*[a-zA-Z_]\w*\s*\)\s*\{({ASCII}|{T_INTEGER}|{T_FLOAT}|\s*)\}
-F_DEVOLVER = {PR_FUNCTION}\s*[a-zA-Z_]\w*\s*\({VARIABLE}\s*\)\s*\{({ASCII}|{T_INTEGER}|{T_FLOAT}|\s*)\}
-F_USUARIO = {PR_FUNCTION}\s*[a-zA-Z_]\w*\s*\(({VARIABLE}|,)*\s*\)\s*\{({ASCII}|{T_INTEGER}|{T_FLOAT}|\s*)\}
-COMENTARIO = \/\/({ASCII}|{T_INTEGER}|{T_FLOAT})*\/\/
-COMENTARIO_MULTILINEA = \*\/({ASCII}|{T_INTEGER}|{T_FLOAT}|\s)*\*\/
-COMENTARIO_CONSOLA = #({ASCII}|{T_INTEGER}|{T_FLOAT}|\s)*#
-CAMPOS_DATOS = \$[Rr][Ee][Cc][Oo][Rr][Dd][Ss][Ee][Tt]\[\'([a-zA-Z_]\w*)\'\]
+CLASSNAME = "::"[Cc][Ll][Aa][Ss]
+
+E_IF = [I|i][F|f]
+E_ELSEIF = [E|e][L|l][S|s][E|e][I|i][F|f]
+E_ELSE = [E|e][L|l][S|s][E|e]
+E_WHILE = [W|w][H|h][I|i][L|l][E|e] 
+E_DOWHILE = [D|d][O|o]
+E_FOREACH = [F|f][O|o][R|r][E|e][A|a][C|c][H|h]
+E_FOR = [F|f][O|o][R|r]
+E_SWITCH = [S|s][W|w][I|i][T|t][C|c][H|h]
+
+GLOBALS = "$_"[G|g][L|l][O|o][B|b][A|a][L|l][S|s]
+SERVER = "$_"[S|s][E|e][R|r][V|v][E|e][R|r]
+GET = "$_"[G|g][E|e][T|t]
+POST = "$_"[P|p][O|o][S|s][T|t]
+FILES = "$_"[F|f][I|i][L|l][E|e][S|s]
+REQUEST = "$_"[R|r][E|e][Q|q][U|u][E|e][S|s][T|t]
+SESSION = "$_"[S|s][E|e][S|s][S|s][I|i][O|o][N|n]
+ENV = "$_"[E|e][N|n][V|v]
+COOKIE = "$_"[C|c][O|o][K|k][I|i][E|e]
+PHP_ERRORMSG = [P|p][H|h][P|p]_[E|e][R|r][R|r][O|o][R|r][M|m][S|s][G|g]
+HTTP_RAW_POST_DATA = "$"[H|h][T|t][T|t][P|p]"_"[R|r][A|a][W|w]_[P|p][O|o][S|s][T|t]"_"[D|d][A|a][T|t][A|a]
+HTTP_RESPONSE_HEADER = "$"[H|h][T|t][T|t][P|p]"_"[R|r][E|e][S|s][P|p][O|o][N|n][S|s][E|e]"_"[H|h][E|e][A|a][D|d][E|e][R|r]
+ARGC = "$"[A|a][R|r][G|g][C|c]
+ARGV = "$"[A|a][R|r][G|g][V|v]
+
+F_ANONIMA = [F|f][U|u][N|n][C|c][T|t][I|i][O|o][N|n]
+F_VARIABLE = [Ff][Uu][Nn][Cc][Tt][Ii][Oo][Nn]{WHITE}+{PALABRA}
+
+CAMPOS_DATOS = "$"[Rr][Ee][Cc][Oo][Rr][Dd][Ss][Ee][Tt]\[\'([a-zA-Z_]\w*)\'\]
 
 %{
     public String retornaToken;
 %}
 
 %%
-
-{WHITE}  {/*iGNORE*/} 
-{PHP_INICIO}  {return SimboloInicio;}
-{PHP_FINAL}  {return SimboloFin;}
-{AVANCE_LINEA}  {retornaToken=yytext(); return AvanceDeLinea;}
-{RETORNO_CARRO}  {retornaToken=yytext(); return RetornoDeCarro;}
-{TAB_HORIZONTAL}  {retornaToken=yytext(); return TabulacionHorizontal;}
-{TAB_VERTICAL}  {retornaToken=yytext(); return TabulacionVertical;}
-{ESCAPE}   {retornaToken=yytext(); return Escape;}
-{AVANCE_PAGINA}  {retornaToken=yytext(); return AvanceDePagina;}
-{BACK_SLASH}  {retornaToken=yytext(); return BackSlash;}
+{WHITE}  {/*IGNORE*/} 
+{SEPARADOR} {retornaToken=yytext(); return Separador;}
+{PHP_INICIO}  {retornaToken=yytext(); return SimboloInicio;}
+{PHP_FINAL}  {retornaToken=yytext(); return SimboloFin;}
+{DEFINICION_O} {retornaToken=yytext(); return AbrirDefinicion;}
+{DEFINICION_C} {retornaToken=yytext(); return CerrarDefinicion;}
+{FUNCION_O} {retornaToken=yytext(); return AbrirFuncion;}
+{FUNCION_C} {retornaToken=yytext(); return CerrarFuncion;}
+{COMENTARIO}  {retornaToken=yytext(); return ComentarioDeUnaLinea;}
+{COMENTARIO_MULTILINEA}  {retornaToken=yytext(); return ComentarioMultilinea;}
+{COMENTARIO_CONSOLA}  {retornaToken=yytext(); return ComentarioTipoConsola;}
 {ASIGNAR}  {retornaToken=yytext(); return Asignacion;}
 {PR_HALT_COMPILER}  {retornaToken=yytext(); return PalabraReservadaHalt_Compiler;}
 {PR_ABSTRACT}  {retornaToken=yytext(); return PalabraReservadaAbstract;}
 {PR_ARRAY}  {retornaToken=yytext(); return PalabraReservadaArray;}
-{PR_AS}  {retornaToken=yytext(); return PalabraReservadaAs;}
+{PR_AS}  {retornaToken=yytext();  return PalabraReservadaAs;}
 {PR_BREAK}  {retornaToken=yytext(); return PalabraReservadaBreak;}
 {PR_CALLABLE}  {retornaToken=yytext(); return PalabraReservadaCallable;}
 {PR_CATCH}  {retornaToken=yytext(); return PalabraReservadaCatch;}
@@ -173,10 +159,12 @@ CAMPOS_DATOS = \$[Rr][Ee][Cc][Oo][Rr][Dd][Ss][Ee][Tt]\[\'([a-zA-Z_]\w*)\'\]
 {PR_DECLARE}  {retornaToken=yytext(); return PalabraReservadaDeclare;}
 {PR_DEFAULT}  {retornaToken=yytext(); return PalabraReservadaDefault;}
 {PR_DIE}  {retornaToken=yytext(); return PalabraReservadaDie;}
-{PR_DO}  {retornaToken=yytext(); return PalabraReservadaDo;}
 {PR_ECHO}  {retornaToken=yytext(); return PalabraReservadaEcho;}
 {PR_EMPTY}  {retornaToken=yytext(); return PalabraReservadaEmpty;}
+{PR_ENDFOR} {retornaToken=yytext(); return PalabraReservadaEndFor;}
+{PR_ENDSWITCH} {retornaToken=yytext(); return PalabraReservadaEndSwitche;}
 {PR_ENDDECLARE}  {retornaToken=yytext(); return PalabraReservadaEndDeclare;}
+{PR_ENDWHILE} {retornaToken=yytext(); return PalabraReservadaEndWhile;}
 {PR_EVAL}  {retornaToken=yytext(); return PalabraReservadaEval;}
 {PR_EXIT}  {retornaToken=yytext(); return PalabraReservadaExit;}
 {PR_EXTENDS}  {retornaToken=yytext(); return PalabraReservadaExtends;}
@@ -219,30 +207,29 @@ CAMPOS_DATOS = \$[Rr][Ee][Cc][Oo][Rr][Dd][Ss][Ee][Tt]\[\'([a-zA-Z_]\w*)\'\]
 {T_STRING}  {retornaToken=yytext(); return TipoCadena;}
 {IDENTIFICADOR}  {retornaToken=yytext(); return Identificador;}
 {VARIABLE}  {retornaToken=yytext(); return Variable;}
-{CONSTANTE}  {retornaToken=yytext(); return Constante;}
 {LINE}  {retornaToken=yytext(); return ConstanteLine;}
 {FILE}  {retornaToken=yytext(); return ConstanteFile;}
 {DIR}  {retornaToken=yytext(); return ConstanteDir;}
 {FUNCTION}  {retornaToken=yytext(); return ConstanteFunction;}
 {CLASS}  {retornaToken=yytext(); return ConstanteClass;}
 {TRAIT} {retornaToken=yytext(); return ConstanteTrait;}
-{METHOD}  {retornaToken=yytext(); return ConstanteMethod}
+{METHOD}  {retornaToken=yytext(); return ConstanteMethod;}
 {NAMESPACE}  {retornaToken=yytext(); return ConstanteNamespace;}
 {CLASSNAME}  {retornaToken=yytext(); return ConstanteClassname;}
 {E_IF}  {retornaToken=yytext(); return EstructuraIf;}
-{E_ELSEIF}  {retornaToken=yytext(); return EstructuraElseIF;}
+{E_ELSEIF}  {retornaToken=yytext(); return EstructuraElseIf;}
 {E_ELSE}  {retornaToken=yytext(); return EstructuraElse;}
 {E_WHILE} {retornaToken=yytext(); return EstructuraWhile;}
 {E_DOWHILE}  {retornaToken=yytext(); return EstructuraDoWhile;}
-{E_FOR}  {retornaToken=yytext(); return EstructuraFor;}
 {E_FOREACH}  {retornaToken=yytext(); return EstructuraForeach;}
-{E_SWITCH}  {retornaToken=yytext(); return EstructuraSwitch;}
+{E_FOR}  {retornaToken=yytext(); return EstructuraFor;}
+{E_SWITCH}  {retornaToken=yytext();  return EstructuraSwitch;}
 {GLOBALS}  {retornaToken=yytext(); return VariablePredeterminadaGlobals;}
 {SERVER}  {retornaToken=yytext(); return VariablePredeterminadaServer;}
 {GET}  {retornaToken=yytext(); return VariablePredeterminadaGet;}
 {POST}  {retornaToken=yytext(); return VariablePredeterminadaPost;}
 {FILES}  {retornaToken=yytext(); return VariablePredeterminadaFiles;}
-{REQUEST} {retornaToken=yytext(); return VariablePredeterminadaReques;}
+{REQUEST} {retornaToken=yytext(); return VariablePredeterminadaRequest;}
 {SESSION}  {retornaToken=yytext(); return VariablePredeterminadaSession;}
 {ENV} {retornaToken=yytext(); return VariablePredeterminadaEnv;}
 {COOKIE}  {retornaToken=yytext(); return VariablePredeterminadaCookie;}
@@ -250,12 +237,8 @@ CAMPOS_DATOS = \$[Rr][Ee][Cc][Oo][Rr][Dd][Ss][Ee][Tt]\[\'([a-zA-Z_]\w*)\'\]
 {HTTP_RAW_POST_DATA}  {retornaToken=yytext(); return VariablePredeterminadaHttpRawPostData;}
 {HTTP_RESPONSE_HEADER}  {retornaToken=yytext(); return VariablePredeterminadaHttpResponseHeader;}
 {ARGC}  {retornaToken=yytext(); return VariablePredeterminadaArgc;}
-{ARGV} {retornaToken=yytext(); return VariablePredeterminadaArgv;}
-{F_ANONIMA}  {retornaToken=yytext(); return FuncionAnonima;}
+{ARGV} { retornaToken=yytext(); return VariablePredeterminadaArgv;}
+{F_ANONIMA}  {return FuncionAnonima;}
 {F_VARIABLE}  {retornaToken=yytext(); return FuncionVariable;}
-{F_DEVOLVER}  {retornaToken=yytext(); return FuncionDevolver;}
-{F_USUARIO}  {retornaToken=yytext(); return FuncionDefinidaPorUsuario;}
-{COMENTARIO}  {retornaToken=yytext(); return ComentarioDeUnaLinea;}
-{COMENTARIO_MULTILINEA}  {retornaToken=yytext(); return ComentarioMultilinea;}
-{COMENTARIO_CONSOLA}  {retornaToken=yytext(); return ComentarioTipoConsola;}
 {CAMPOS_DATOS}  {retornaToken=yytext(); return CampoDeAccesoABaseDeDatos;}
+. {return Error;}

@@ -5,6 +5,9 @@
  */
 package analizador;
 import java.io.*;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -14,11 +17,20 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class Interfaz extends javax.swing.JFrame {
 
+    private FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo PHP","php");
+    String ruta;
+    String name;
+    String text;
+    String[] direccion;
+    
     /**
      * Creates new form Interfaz
      */
     public Interfaz() {
         initComponents();
+        ruta = "";
+        name = "";
+        text = "";
     }
 
     /**
@@ -30,91 +42,176 @@ public class Interfaz extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
+        txt_texto = new javax.swing.JTextArea();
+        txt_archivo = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txt_area = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextField1.setName("direccion"); // NOI18N
-
-        jToggleButton1.setText("Ingresar");
-        jToggleButton1.setName("aceptar"); // NOI18N
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.setText("Ingrese Archivo");
+        jButton1.setName("btn_archivo"); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jButton2.setText("Validar");
+        jButton2.setName("btn_validar"); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setText("Tokens Identificados");
+        txt_texto.setColumns(20);
+        txt_texto.setRows(5);
+        jScrollPane1.setViewportView(txt_texto);
+
+        txt_area.setColumns(20);
+        txt_area.setRows(5);
+        jScrollPane2.setViewportView(txt_area);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36))
             .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jToggleButton1))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addGap(59, 59, 59)
+                .addComponent(jButton1)
+                .addGap(55, 55, 55)
+                .addComponent(txt_archivo, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(301, Short.MAX_VALUE)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(278, 278, 278))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(22, 22, 22)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(503, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                    .addComponent(jButton1)
+                    .addComponent(txt_archivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(138, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(35, 35, 35)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    private FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo de texto","txt");
-    String ruta;
-    String nombre;
-
-    public void Archivo() throws IOException {
-        File fichero = new File(nombre+".out");
-        PrintWriter writer;
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
-        try{
-            writer = new PrintWriter(fichero);
-            writer.print("TEXT");
-            writer.close();
-        } catch(FileNotFoundException ex){
-        }
-    }
-    
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        txt_archivo.setText(" ");
+        txt_area.setText(" ");
+        txt_texto.setText(" ");
+        
         JFileChooser dlg = new JFileChooser();
         dlg.setFileFilter(filter);
         int option = dlg.showOpenDialog(this);
         
         if(option == JFileChooser.APPROVE_OPTION){
-            nombre = dlg.getSelectedFile().getPath();
-            
+            String fil = dlg.getSelectedFile().getAbsolutePath();
+            txt_archivo.setText(fil);
+            ruta = fil;
+            direccion = ruta.split("\\.");
+            name = direccion[0];
         }
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
+        
+        File file = dlg.getSelectedFile();
+        Scanner scn;
+        try {
+            scn = new Scanner(file);
+            while (scn.hasNext()) {
+             txt_texto.insert(scn.nextLine() + "\n", txt_texto.getText().length());
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        
+        try {
+            probarLexer();
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void probarLexer()throws IOException{
+        File fichero = new File(name+".out");
+        PrintWriter writer;
+        Reader prueba;
+        prueba = new BufferedReader(new FileReader(txt_archivo.getText()));          
+        miniPHP lexer = new miniPHP(prueba);
+        String resultado = "";
+        String comando;
+        String x;
+        
+          
+        while(true)
+        {
+            Token token = lexer.yylex();
+            if(token == null){
+                resultado = resultado + "EOF";
+                txt_area.setText(resultado);
+                return;
+                
+            }
+            
+            switch(token){
+                case Error:
+                    resultado = resultado + "Error, simbolo no reconocido" +  "\n";
+                    break;
+                case Identificador: case Variable: case FuncionVariable: case FuncionDevolver: case FuncionDefinidaPorUsuario: case ComentarioDeUnaLinea: case ComentarioMultilinea: case ComentarioTipoConsola: 
+                    resultado = resultado + "Token: " + token + " " + lexer.retornaToken+ "\n";
+                    break;
+                case CampoDeAccesoABaseDeDatos:
+                    comando = lexer.retornaToken;
+                    resultado = resultado + "Token: " + token + " " + comando.toUpperCase() + "\n";
+                    break;
+                default:
+                    resultado = resultado + "Token: " + token + "\n";
+                    break;
+            }
+
+            text = resultado;
+            txt_area.setText(resultado);
+            
+            try{
+            writer = new PrintWriter(fichero);
+            writer.print(text);           
+            writer.close();
+            }
+            catch(IOException e){
+
+            }
+        }   
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -150,12 +247,13 @@ public class Interfaz extends javax.swing.JFrame {
         });
     }
 
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField txt_archivo;
+    private javax.swing.JTextArea txt_area;
+    private javax.swing.JTextArea txt_texto;
     // End of variables declaration//GEN-END:variables
 }
